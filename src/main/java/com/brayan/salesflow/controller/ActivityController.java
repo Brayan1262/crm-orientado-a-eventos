@@ -1,5 +1,6 @@
 package com.brayan.salesflow.controller;
-
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import com.brayan.salesflow.dto.ActivityRequest;
 import com.brayan.salesflow.dto.ActivityResponse;
 import com.brayan.salesflow.service.ActivityService;
@@ -15,11 +16,12 @@ import java.util.List;
 @RequestMapping("/api/activities")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
+@Tag(name = "Actividades", description = "Gestión de llamadas, reuniones, tareas, correos y notas comerciales")
 public class ActivityController {
 
     private final ActivityService activityService;
-
     @PostMapping
+    @Operation(summary = "Crear cliente", description = "Registra un nuevo cliente o empresa en el CRM")
     public ResponseEntity<ActivityResponse> create(@Valid @RequestBody ActivityRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(activityService.create(request));
     }

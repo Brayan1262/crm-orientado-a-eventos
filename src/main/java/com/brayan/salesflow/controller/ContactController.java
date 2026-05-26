@@ -10,16 +10,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/api/contacts")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
+@Tag(name = "Contactos", description = "Gestión de contactos asociados a clientes")
 public class ContactController {
 
     private final ContactService contactService;
-
     @PostMapping
+    @Operation(summary = "Crear cliente", description = "Registra un nuevo cliente o empresa en el CRM")
     public ResponseEntity<ContactResponse> create(@Valid @RequestBody ContactRequest request) {
         ContactResponse response = contactService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);

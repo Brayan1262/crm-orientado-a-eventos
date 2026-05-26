@@ -4,23 +4,27 @@ import com.brayan.salesflow.dto.OpportunityRequest;
 import com.brayan.salesflow.dto.OpportunityResponse;
 import com.brayan.salesflow.entity.OpportunityStatus;
 import com.brayan.salesflow.service.OpportunityService;
+
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/opportunities")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
+@Tag(name = "Oportunidades", description = "Gestión de oportunidades de venta")
 public class OpportunityController {
 
     private final OpportunityService opportunityService;
 
     @PostMapping
+    @Operation(summary = "Crear cliente", description = "Registra un nuevo cliente o empresa en el CRM")
     public ResponseEntity<OpportunityResponse> create(@Valid @RequestBody OpportunityRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(opportunityService.create(request));
     }

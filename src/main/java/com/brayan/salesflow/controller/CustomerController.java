@@ -1,5 +1,6 @@
 package com.brayan.salesflow.controller;
-
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import com.brayan.salesflow.dto.CustomerRequest;
 import com.brayan.salesflow.dto.CustomerResponse;
 import com.brayan.salesflow.entity.CustomerStatus;
@@ -16,11 +17,12 @@ import java.util.List;
 @RequestMapping("/api/customers")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
+@Tag(name = "Clientes", description = "Gestión de clientes y empresas dentro del CRM")
 public class CustomerController {
 
     private final CustomerService customerService;
-
     @PostMapping
+    @Operation(summary = "Crear cliente", description = "Registra un nuevo cliente o empresa en el CRM")
     public ResponseEntity<CustomerResponse> create(@Valid @RequestBody CustomerRequest request) {
         CustomerResponse response = customerService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
