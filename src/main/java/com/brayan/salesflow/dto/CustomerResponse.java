@@ -26,5 +26,4 @@ public class CustomerResponse {
     private CustomerStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
 }
