@@ -1,205 +1,85 @@
-# SalesFlow CRM API
+# SalesFlow CRM API 🛡️
 
-API REST tipo CRM desarrollada con Java Spring Boot para la gestión comercial de clientes, contactos, oportunidades de venta, actividades y dashboard empresarial.
-
----
-
-## Descripción
-
-SalesFlow CRM API es un sistema backend orientado a la gestión comercial de empresas. Permite registrar clientes, administrar contactos, controlar oportunidades de venta, programar actividades de seguimiento y visualizar indicadores clave mediante un dashboard CRM.
-
-Este proyecto está inspirado en conceptos de plataformas CRM como Salesforce, aplicando arquitectura por capas, buenas prácticas REST, validaciones, manejo global de errores, documentación con Swagger y persistencia con PostgreSQL.
+> API REST tipo CRM desarrollada para la gestión comercial empresarial. Permite registrar clientes, administrar contactos, controlar oportunidades de venta, programar actividades de seguimiento y visualizar indicadores clave mediante un dashboard CRM inspirado en Salesforce.
+>
+> ![Java](https://img.shields.io/badge/JAVA-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white) ![Spring Boot](https://img.shields.io/badge/SPRING_BOOT-3-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white) ![PostgreSQL](https://img.shields.io/badge/POSTGRESQL-DB-316192?style=for-the-badge&logo=postgresql&logoColor=white) ![Docker](https://img.shields.io/badge/DOCKER-Compose-2CA5E0?style=for-the-badge&logo=docker&logoColor=white) ![Swagger](https://img.shields.io/badge/SWAGGER-OpenAPI-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)
 
 ---
 
-## Tecnologías utilizadas
+## 🚀 Características Principales
 
-- Java 21
-- Spring Boot 3
-- Spring Web
-- Spring Data JPA
-- Hibernate
-- PostgreSQL
-- Docker
-- Docker Compose
-- Lombok
-- Bean Validation
-- Swagger / OpenAPI
-- Maven
-- Git
-- GitHub
+- **Gestión Estructurada:** Operaciones CRUD completas para **Clientes** (Empresas), **Contactos**, **Oportunidades Comerciales** y **Actividades de Seguimiento**.
+- **Dashboard Gerencial:** Endpoints integrados para visualizar indicadores en tiempo real (clientes activos, oportunidades ganadas/perdidas, montos estimados, etc.).
+- **Arquitectura Robusta:** Aplicación de buenas prácticas REST, arquitectura en capas, validaciones exhaustivas de datos (Bean Validation) y manejo global centralizado de errores.
+- **Infraestructura Moderna:** Persistencia de datos con PostgreSQL y despliegue rápido aislado usando contenedores Docker.
+- **Documentación Activa:** Autogeneración de documentación interactiva a través de Swagger / OpenAPI para un consumo simplificado por parte de aplicaciones Frontend.
 
 ---
 
-## Funcionalidades principales
+## 🛠️ Stack Tecnológico
 
-- Gestión de clientes.
-- Gestión de contactos asociados a clientes.
-- Gestión de oportunidades comerciales.
-- Gestión de actividades y seguimientos.
-- Dashboard CRM con indicadores comerciales.
-- Validaciones de datos.
-- Manejo global de errores.
-- Documentación interactiva con Swagger.
-- Base de datos PostgreSQL usando Docker.
+| Capa | Tecnologías |
+| :--- | :--- |
+| **Framework Base** | Java 21, Spring Boot 3, Spring Web |
+| **Persistencia de Datos** | PostgreSQL, Spring Data JPA, Hibernate |
+| **Herramientas Clave** | Lombok, Bean Validation, Maven |
+| **Documentación API** | Swagger / OpenAPI |
+| **Orquestación DevOps** | Docker, Docker Compose |
 
 ---
 
-## Módulos del sistema
+## 🏗️ Arquitectura del Sistema
 
-### Clientes
+El proyecto sigue una estructura limpia dentro de `src/main/java/`:
 
-Permite administrar empresas o clientes comerciales.
+```text
+com.brayan.salesflow
+├── config/       # Configuraciones globales (Swagger, CORS, etc.)
+├── controller/   # Controladores REST expuestos
+├── dto/          # Objetos de Transferencia de Datos (Request/Response)
+├── entity/       # Modelos de Base de Datos (Hibernate/JPA)
+├── exception/    # Controladores globales de excepciones (@ControllerAdvice)
+├── repository/   # Interfaces de acceso a base de datos
+└── service/      # Lógica de negocio y reglas comerciales
+```
 
-Endpoints principales:
+---
 
-```http
-POST   /api/customers
-GET    /api/customers
-GET    /api/customers/{id}
-GET    /api/customers/search?companyName=
-GET    /api/customers/status/{status}
-PUT    /api/customers/{id}
-DELETE /api/customers/{id}
+## 📊 Endpoints Principales (Módulos)
 
-Estados disponibles:
+### 🏢 Clientes (`/api/customers`)
+Administración de cuentas o empresas comerciales con sus respectivos estados (`ACTIVE`, `INACTIVE`, `PROSPECT`).
 
-ACTIVE
-INACTIVE
-PROSPECT
-Contactos
+### 👤 Contactos (`/api/contacts`)
+Gestión de personas de contacto asociadas relacionalmente a un cliente específico.
 
-Permite registrar personas de contacto asociadas a un cliente.
+### 💰 Oportunidades (`/api/opportunities`)
+Control de embudo de ventas. Estados: `NEW`, `CONTACTED`, `PROPOSAL`, `NEGOTIATION`, `WON`, `LOST`.
 
-Endpoints principales:
+### 📅 Actividades (`/api/activities`)
+Registro de tareas y seguimientos comerciales (`CALL`, `EMAIL`, `MEETING`, `TASK`, `NOTE`).
 
-POST   /api/contacts
-GET    /api/contacts
-GET    /api/contacts/{id}
-GET    /api/contacts/customer/{customerId}
-PUT    /api/contacts/{id}
-DELETE /api/contacts/{id}
-Oportunidades
+### 📈 Dashboard (`/api/dashboard`)
+Resumen de KPIs: Total de clientes, oportunidades abiertas vs ganadas, monto total estimado, tareas pendientes.
 
-Permite gestionar oportunidades de venta asociadas a clientes.
+---
 
-Endpoints principales:
+## 🚀 Roadmap y Futuras Mejoras
 
-POST   /api/opportunities
-GET    /api/opportunities
-GET    /api/opportunities/{id}
-GET    /api/opportunities/customer/{customerId}
-GET    /api/opportunities/status/{status}
-PUT    /api/opportunities/{id}
-DELETE /api/opportunities/{id}
+- [ ] Implementar sistema de Autenticación y Autorización de seguridad con **JWT**.
+- [ ] Incorporar Roles de acceso comerciales (`ADMIN`, `SALES`, `SUPPORT`).
+- [ ] Desarrollar cliente Frontend dinámico completo en **Angular**.
+- [ ] Generación automática de reportes de ventas en formato PDF y exportación en Excel.
+- [ ] Implementar un módulo de auditoría de cambios comerciales (Historial de acciones).
+- [ ] Despliegue automatizado de la arquitectura en la Nube.
 
-Estados disponibles:
+---
 
-NEW
-CONTACTED
-PROPOSAL
-NEGOTIATION
-WON
-LOST
-Actividades
+## 👨‍💻 Autor
 
-Permite registrar llamadas, reuniones, correos, tareas y notas comerciales.
+**Brayan Jair Chavez Oscor**
+*Ingeniería de Software / Arquitectura Backend*
 
-Endpoints principales:
-
-POST   /api/activities
-GET    /api/activities
-GET    /api/activities/{id}
-GET    /api/activities/customer/{customerId}
-GET    /api/activities/opportunity/{opportunityId}
-GET    /api/activities/pending
-PUT    /api/activities/{id}
-PATCH  /api/activities/{id}/complete
-DELETE /api/activities/{id}
-
-Tipos disponibles:
-
-CALL
-EMAIL
-MEETING
-TASK
-NOTE
-Dashboard CRM
-
-Muestra indicadores principales del sistema comercial.
-
-Endpoint:
-
-GET /api/dashboard
-
-Indicadores incluidos:
-
-Total de clientes.
-Clientes activos.
-Clientes prospectos.
-Clientes inactivos.
-Total de contactos.
-Total de oportunidades.
-Oportunidades abiertas.
-Oportunidades ganadas.
-Oportunidades perdidas.
-Monto total estimado.
-Monto ganado.
-Total de actividades.
-Actividades pendientes.
-Actividades completadas.
-Estructura del proyecto
-salesflow-crm-api/
-├── src/
-│   ├── main/
-│   │   ├── java/com/brayan/salesflow/
-│   │   │   ├── config/
-│   │   │   ├── controller/
-│   │   │   ├── dto/
-│   │   │   ├── entity/
-│   │   │   ├── exception/
-│   │   │   ├── repository/
-│   │   │   └── service/
-│   │   └── resources/
-│   │       └── application.properties
-│   └── test/
-├── docker-compose.yml
-├── pom.xml
-├── README.md
-└── .gitignore
-
-Estado del proyecto
-SalesFlow CRM API v1.0
-
-Estado:
-
-Funcional
-
-Módulos completados:
-
-Proyecto base.
-PostgreSQL con Docker.
-CRUD de clientes.
-CRUD de contactos.
-CRUD de oportunidades.
-Gestión de actividades.
-Dashboard CRM.
-Validaciones.
-Manejo global de errores.
-Swagger / OpenAPI.
-Futuras mejoras
-Seguridad con JWT.
-Roles ADMIN, SALES y SUPPORT.
-Frontend Angular.
-Reportes PDF.
-Exportación Excel.
-Auditoría de cambios.
-Tests unitarios.
-Despliegue en la nube.
-Autor
-
-Brayan Jair Chavez Oscor
-
-GitHub: https://github.com/Brayan1262
-LinkedIn: https://www.linkedin.com/in/brayan-chavez-218088334/
-Portafolio: https://brayan1262.github.io/portafolio-brayan/
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Brayan1262)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/brayan-chavez-218088334/)
+[![Portfolio](https://img.shields.io/badge/Portfolio-000000?style=for-the-badge&logo=web&logoColor=white)](https://brayan1262.github.io/portafolio-brayan/)
