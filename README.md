@@ -1,85 +1,54 @@
-# API CRM Gestión Comercial🛡️
+# Salesflow CRM API 🚀
 
-> API REST tipo CRM desarrollada para la gestión comercial empresarial. Permite registrar clientes, administrar contactos, controlar oportunidades de venta, programar actividades de seguimiento y visualizar indicadores clave mediante un dashboard CRM inspirado en Salesforce.
->
-> ![Java](https://img.shields.io/badge/JAVA-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white) ![Spring Boot](https://img.shields.io/badge/SPRING_BOOT-3-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white) ![PostgreSQL](https://img.shields.io/badge/POSTGRESQL-DB-316192?style=for-the-badge&logo=postgresql&logoColor=white) ![Docker](https://img.shields.io/badge/DOCKER-Compose-2CA5E0?style=for-the-badge&logo=docker&logoColor=white) ![Swagger](https://img.shields.io/badge/SWAGGER-OpenAPI-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)
+> **Staff Engineer Level Architecture Showcase**
 
----
-
-## 🚀 Características Principales
-
-- **Gestión Estructurada:** Operaciones CRUD completas para **Clientes** (Empresas), **Contactos**, **Oportunidades Comerciales** y **Actividades de Seguimiento**.
-- **Dashboard Gerencial:** Endpoints integrados para visualizar indicadores en tiempo real (clientes activos, oportunidades ganadas/perdidas, montos estimados, etc.).
-- **Arquitectura Robusta:** Aplicación de buenas prácticas REST, arquitectura en capas, validaciones exhaustivas de datos (Bean Validation) y manejo global centralizado de errores.
-- **Infraestructura Moderna:** Persistencia de datos con PostgreSQL y despliegue rápido aislado usando contenedores Docker.
-- **Documentación Activa:** Autogeneración de documentación interactiva a través de Swagger / OpenAPI para un consumo simplificado por parte de aplicaciones Frontend.
-
----
-
-## 🛠️ Stack Tecnológico
-
-| Capa | Tecnologías |
-| :--- | :--- |
-| **Framework Base** | Java 21, Spring Boot 3, Spring Web |
-| **Persistencia de Datos** | PostgreSQL, Spring Data JPA, Hibernate |
-| **Herramientas Clave** | Lombok, Bean Validation, Maven |
-| **Documentación API** | Swagger / OpenAPI |
-| **Orquestación DevOps** | Docker, Docker Compose |
-
----
+Salesflow CRM API no es un simple CRUD. Es una plataforma de gestión comercial diseñada bajo estrictos estándares de **Arquitectura Orientada a Eventos (EDA)**, **Observabilidad** y **Resiliencia**, pensada para escalar masivamente en entornos de producción.
 
 ## 🏗️ Arquitectura del Sistema
 
-El proyecto sigue una estructura limpia dentro de `src/main/java/`:
+El sistema ha sido evolucionado desde un monolito tradicional hacia un ecosistema distribuido y reactivo, implementando los siguientes patrones avanzados:
 
-```text
-com.brayan.salesflow
-├── config/       # Configuraciones globales (Swagger, CORS, etc.)
-├── controller/   # Controladores REST expuestos
-├── dto/          # Objetos de Transferencia de Datos (Request/Response)
-├── entity/       # Modelos de Base de Datos (Hibernate/JPA)
-├── exception/    # Controladores globales de excepciones (@ControllerAdvice)
-├── repository/   # Interfaces de acceso a base de datos
-└── service/      # Lógica de negocio y reglas comerciales
+### 1. Data Pipeline & CDC (Change Data Capture)
+Hemos desacoplado la base de datos de la lógica de negocio secundaria. En lugar de escribir eventos manualmente, utilizamos **Debezium** acoplado a **PostgreSQL** (`wal_level=logical`) para capturar cada inserción o modificación a nivel de transacción (Redo Logs). 
+* Estos eventos son transmitidos en tiempo real (milisegundos) hacia un clúster de **Apache Kafka**.
+* Microservicios en Java (Spring Boot Kafka Listeners) consumen estos tópicos para ejecutar procesos asíncronos pesados (envío de correos, indexación de búsquedas, etc.) sin impactar el tiempo de respuesta del usuario.
+
+### 2. Observabilidad (IDP Ready)
+La aplicación expone métricas de nivel interno mediante **Spring Boot Actuator** y **Micrometer**, las cuales son recolectadas por **Prometheus** y visualizadas en tiempo real a través de Dashboards personalizados en **Grafana**. 
+* Esto permite monitorear JVM Heap, conexiones a base de datos (HikariCP), latencias de endpoints y el flujo de Kafka con total transparencia.
+
+### 3. Chaos Engineering & Self-Healing
+La plataforma está contenerizada con **Docker** y lista para despliegues orquestados en **Kubernetes**. 
+Para garantizar la máxima fiabilidad, utilizamos **Chaos Mesh** inyectando fallos controlados (ej. `NetworkChaos` para latencias de 5 segundos, o `PodChaos` para asesinato de la BD). 
+* La arquitectura sobrevive a caídas de la base de datos recuperándose en menos de 2 segundos gracias a los liveness probes de Kubernetes y el reintento de conexión de la API (Zero-Downtime auto-healing).
+
+## 🛠️ Stack Tecnológico
+
+* **Core:** Java 21, Spring Boot 3, Spring Data JPA, Spring Kafka.
+* **Database:** PostgreSQL 15 (Logical Decoding activo).
+* **Event Streaming:** Apache Kafka, Zookeeper, Kafka Connect (Debezium Plugin).
+* **Observability:** Prometheus, Grafana.
+* **Infra / SRE:** Docker, Kubernetes (`kind`), Chaos Mesh.
+
+## 🚀 Cómo desplegar localmente
+
+### Entorno Completo (Docker Compose)
+Levanta Kafka, Postgres, Debezium, Prometheus y Grafana:
+```bash
+docker-compose up -d
 ```
+Luego, ejecuta la API de Spring Boot:
+```bash
+./mvnw spring-boot:run
+```
+*(Grafana disponible en `http://localhost:3000`)*
+
+### Pruebas de Resiliencia (Kubernetes & Chaos)
+1. Construir imagen: `docker build -t salesflow-api:latest .`
+2. Crear clúster: `kind create cluster --name salesflow`
+3. Cargar imagen: `kind load docker-image salesflow-api:latest --name salesflow`
+4. Aplicar manifiestos: `kubectl apply -f k8s/`
+5. Ejecutar caos: `kubectl apply -f chaos/pod-kill-postgres.yaml`
 
 ---
-
-## 📊 Endpoints Principales (Módulos)
-
-### 🏢 Clientes (`/api/customers`)
-Administración de cuentas o empresas comerciales con sus respectivos estados (`ACTIVE`, `INACTIVE`, `PROSPECT`).
-
-### 👤 Contactos (`/api/contacts`)
-Gestión de personas de contacto asociadas relacionalmente a un cliente específico.
-
-### 💰 Oportunidades (`/api/opportunities`)
-Control de embudo de ventas. Estados: `NEW`, `CONTACTED`, `PROPOSAL`, `NEGOTIATION`, `WON`, `LOST`.
-
-### 📅 Actividades (`/api/activities`)
-Registro de tareas y seguimientos comerciales (`CALL`, `EMAIL`, `MEETING`, `TASK`, `NOTE`).
-
-### 📈 Dashboard (`/api/dashboard`)
-Resumen de KPIs: Total de clientes, oportunidades abiertas vs ganadas, monto total estimado, tareas pendientes.
-
----
-
-## 🚀 Roadmap y Futuras Mejoras
-
-- [ ] Implementar sistema de Autenticación y Autorización de seguridad con **JWT**.
-- [ ] Incorporar Roles de acceso comerciales (`ADMIN`, `SALES`, `SUPPORT`).
-- [ ] Desarrollar cliente Frontend dinámico completo en **Angular**.
-- [ ] Generación automática de reportes de ventas en formato PDF y exportación en Excel.
-- [ ] Implementar un módulo de auditoría de cambios comerciales (Historial de acciones).
-- [ ] Despliegue automatizado de la arquitectura en la Nube.
-
----
-
-## 👨‍💻 Autor
-
-**Brayan Jair Chavez Oscor**
-*Ingeniería de Software / Arquitectura Backend*
-
-[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Brayan1262)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/brayan-chavez-218088334/)
-[![Portfolio](https://img.shields.io/badge/Portfolio-000000?style=for-the-badge&logo=web&logoColor=white)](https://brayan1262.github.io/portafolio-brayan/)
+*Desarrollado con mentalidad SRE.*

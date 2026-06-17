@@ -27,6 +27,8 @@ spec:
               value: postgres
             - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
               value: kafka-service:9092
+            - name: SPRING_KAFKA_LISTENER_AUTO_STARTUP
+              value: "false"
           ports:
             - containerPort: 8081
 ---

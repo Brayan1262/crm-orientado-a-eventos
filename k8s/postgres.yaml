@@ -17,7 +17,7 @@ spec:
       containers:
         - name: postgres
           image: postgres:15
-          command: ["postgres", "-c", "wal_level=logical"]
+          args: ["-c", "wal_level=logical"]
           env:
             - name: POSTGRES_DB
               value: salesflow_crm_db

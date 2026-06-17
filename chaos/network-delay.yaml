@@ -12,7 +12,7 @@ spec:
     labelSelectors:
       app: salesflow-api
   delay:
-    latency: "200ms"
+    latency: "5000ms"
     correlation: "100"
     jitter: "0ms"
   direction: to
@@ -23,6 +23,4 @@ spec:
       labelSelectors:
         app: salesflow-postgres
     mode: all
-  duration: "30s"
-  scheduler:
-    cron: "@every 2m"
+  duration: "1h"
